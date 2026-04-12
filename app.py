@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from models import db
 
 app = Flask(__name__)
 
@@ -7,22 +7,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///budgetbuddy.db'
 
 
-db = SQLAlchemy(app)
 
-# Categorry table
-class Category(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    type = db.Column(db.String(10), nullable=False) 
-
-
-# Transaction table
-class Transaction(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    amount = db.Column(db.Float, nullable=False)
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
-    date = db.Column(db.String(20), nullable=False)
-    note = db.Column(db.String(200))
+db.init_app(app)
 
 
 with app.app_context():
