@@ -2,7 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-class Categgory(db.Model):
+class Category(db.Model):
     id = db.Column(db.Integer, primar_key=True)
     name = db.Column(db.String(100), nullable = False)
     type = db.Column(db.String(10), nullable=False)
