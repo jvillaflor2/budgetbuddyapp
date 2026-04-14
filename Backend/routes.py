@@ -8,3 +8,12 @@ bp = Blueprint('bp', __name__ )
 def get_categories():
     categories = Category.query.all()
     return jsonify([{ 'id': c.id, 'name': c.name, 'type': c.type } for c in categories])
+
+#POST/
+@bp.route('/categories', methods = ['POST'])
+def add_category():
+    data = request.get_json()
+    category = Category(name=data['name'], type=data['type'])
+    db.session.add(category)
+    db.session.commit()
+    return jsonify({ 'id': category.id, 'name': category.name, 'type': category.type }), 
