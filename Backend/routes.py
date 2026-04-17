@@ -17,3 +17,11 @@ def add_category():
     db.session.add(category)
     db.session.commit()
     return jsonify({ 'id': category.id, 'name': category.name, 'type': category.type }), 
+
+#DELETE
+@bp.route('/categories/<int:id>', methods=['DELETE'])
+def delete_category(id):    
+    category = Category.query.get_or_404(id)
+    db.session.delete(category)
+    db.session.commit()
+    return jsonify({'message': 'Deleted'}), 200
