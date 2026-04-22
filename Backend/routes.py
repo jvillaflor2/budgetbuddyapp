@@ -16,7 +16,7 @@ def add_category():
     category = Category(name=data['name'], type=data['type'])
     db.session.add(category)
     db.session.commit()
-    return jsonify({ 'id': category.id, 'name': category.name, 'type': category.type }), 
+    return jsonify({ 'id': category.id, 'name': category.name, 'type': category.type }) 
 
 #DELETE
 @bp.route('/categories/<int:id>', methods=['DELETE'])
