@@ -1,12 +1,13 @@
 from flask import Flask
 from models import db
+from routes import bp
 
 app = Flask(__name__)
 
 # Where to put database file
 app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///budgetbuddy.db'
 
-
+app.register_blueprint(bp)
 
 db.init_app(app)
 
