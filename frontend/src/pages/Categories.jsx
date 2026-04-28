@@ -27,7 +27,34 @@ function Categories(){
     await axios.delete(`http://localhost:5000/categories/${id}`);
     fetchCategories();
   };
-  return <h1>Categories</h1>;
+  return (
+      <div>
+      <h1>Categories</h1>
+
+      <input
+        type="text"
+        placeholder="Category name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+
+      <select value={type} onChange={(e) => setType(e.target.value)}>
+        <option value="expense">Expense</option>
+        <option value="income">Income</option>
+      </select>
+
+      <button onClick={addCategory}>Add Category</button>
+
+      <ul>
+        {categories.map((cat) => (
+          <li key={cat.id}>
+            {cat.name} — {cat.type}
+            <button onClick={() => deleteCategory(cat.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 export default Categories;
