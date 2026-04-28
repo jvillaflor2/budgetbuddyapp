@@ -1,16 +1,17 @@
 from flask import Flask
 from models import db
 from routes import bp
+from flask_cors import CORS
 
 app = Flask(__name__)
 
 # Where to put database file
 app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///budgetbuddy.db'
 
-app.register_blueprint(bp)
-
 db.init_app(app)
+CORS(app)
 
+app.register_blueprint(bp)
 
 with app.app_context():
     db.create_all()
