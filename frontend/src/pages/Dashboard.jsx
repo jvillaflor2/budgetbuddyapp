@@ -41,17 +41,17 @@ function Dashboard() {
       <h1 className="text-2xl font-semibold text-gray-800 mb-6">Dashboard</h1>
 
       <div className="grid grid-cols-3 gap-4 mb-8">
-        <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-200">
           <p className="text-sm text-gray-500 mb-1">Balance</p>
           <p className="text-2xl font-semibold text-gray-800">${balance.toFixed(2)}</p>
         </div>
         <div className="bg-[#A7F3D0] rounded-2xl p-5 shadow-sm">
           <p className="text-sm text-emerald-700 mb-1">Total Income</p>
-          <p className="text-2xl font-semibold text-emerald-800">${totalIncome.toFixed(2)}</p>
+          <p className="text-2xl font-semibold text-emerald-900">${totalIncome.toFixed(2)}</p>
         </div>
-        <div className="bg-[#FCA5A5] rounded-2xl p-5 shadow-sm">
-          <p className="text-sm text-red-700 mb-1">Total Expenses</p>
-          <p className="text-2xl font-semibold text-red-800">${totalExpenses.toFixed(2)}</p>
+        <div className="bg-[#FDBA74] rounded-2xl p-5 shadow-sm">
+          <p className="text-sm text-orange-700 mb-1">Total Expenses</p>
+          <p className="text-2xl font-semibold text-orange-900">${totalExpenses.toFixed(2)}</p>
         </div>
       </div>
 
@@ -66,7 +66,7 @@ function Dashboard() {
                   <p className="text-sm font-medium text-gray-800">{cat ? cat.name : 'Unknown'}</p>
                   <p className="text-xs text-gray-400">{t.date} {t.note && `— ${t.note}`}</p>
                 </div>
-                <p className={`text-sm font-semibold ${cat && cat.type === 'income' ? 'text-emerald-600' : 'text-red-500'}`}>
+                <p className={`text-sm font-semibold px-3 py-1 rounded-full ${cat && cat.type === 'income' ? 'bg-[#A7F3D0] text-emerald-800' : 'bg-[#FDBA74] text-orange-800'}`}>
                   {cat && cat.type === 'income' ? '+' : '-'}${t.amount}
                 </p>
               </li>
