@@ -8,12 +8,16 @@ import Categories from './pages/Categories';
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/transactions" element={<Transactions />} />
-        <Route path="/categories" element={<Categories />} />
-      </Routes>
+      <div className="min-h-screen bg-[#F8FAFC]">
+        <Navbar />
+        <div className= "max-w-5xl mx-auto px-6 py-8 ">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/transactions" element={<Transactions />} />
+            <Route path="/categories" element={<Categories />} />
+          </Routes>
+        </div>
+      </div>
     </BrowserRouter>
   );
 }
