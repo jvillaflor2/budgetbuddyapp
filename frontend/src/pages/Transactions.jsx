@@ -8,6 +8,7 @@ function Transactions() {
   const [categoryId, setCategoryId] = useState('');
   const [date, setDate] = useState('');
   const [note, setNote] = useState('');
+  const [error, setError] = useState('')
 
   useEffect(() => {
     fetchTransactions();
@@ -25,6 +26,34 @@ function Transactions() {
   };
 
   const addTransaction = async () => {
+    if (!amount) {
+      setError('Please enter an amount');
+      return;
+    }
+    if (isNaN(parseFloat(amount))) {
+    setError('Amount must be a valid number');
+    return;
+    }
+    if (parseFloat(amount) <= 0) {
+      setError('Amount must be greater than zero');
+      return;
+    }
+    
+    if (!categoryId) {
+      setError('Please select a category');
+      return;
+    }
+    if (!date) {
+      setError('Please select a date');
+      return;
+    }
+    const selectedDate = new Date(date);
+    const today = new Date();
+    if (selectedDate > today) {
+      setError('Date cannot be in the future');
+      return;
+    }
+    setError('');
     await axios.post('http://localhost:5000/transactions', {
       amount: parseFloat(amount),
       category_id: parseInt(categoryId),
@@ -83,6 +112,9 @@ function Transactions() {
         className="border border-gray-200 rounded-xl px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-violet-300"
       />
       </div>
+      {error && (
+      <p className="text-sm text-red-400 mt-2">{error}</p>
+        )}
       <button onClick={addTransaction}
               className="mt-4 bg-[#C4B5FD] text-violet-900 text-sm font-medium px-5 py-2 rounded-xl hover:bg-violet-300 transition-colors">Add Transaction</button>
       </div>
