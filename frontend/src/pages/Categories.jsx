@@ -33,7 +33,7 @@ function Categories(){
 
       <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-6">
         <h2 className="text-lg font-semibold text-gray-700 mb-4">Add Category</h2>
-        <div className="flex gap-3">
+        <div className="flex flex-col md:flex-row gap-3">
           <input
             type="text"
             placeholder="Category name"
