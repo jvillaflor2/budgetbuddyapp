@@ -1,5 +1,6 @@
 import React, {useState, useEffect}from 'react';
 import axios from 'axios';
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts/umd/Recharts';
 
 function Dashboard() {
 
@@ -23,17 +24,12 @@ function Dashboard() {
   };
 
   const filteredTransactions = transactions.filter(t => {
-    const transactionDate = new Date(t.date);
+    const [year, month, day] = t.date.split('-').map(Number);
     if (selectedMonth === 0) {
-        
-        return transactionDate.getFullYear() === selectedYear;
+        return year === selectedYear;
     }
-    
-    return (
-        transactionDate.getMonth() + 1 === selectedMonth &&
-        transactionDate.getFullYear() === selectedYear
-    );
-  });
+    return month === selectedMonth && year === selectedYear;
+});
 
   const totalIncome = filteredTransactions
     .filter(t => {
@@ -49,6 +45,37 @@ function Dashboard() {
     .reduce((sum, t) => sum + t.amount, 0);
 
   const balance = totalIncome - totalExpenses;
+  const spendingByCategory = categories
+    .filter(cat => cat.type === 'expense')
+    .map(cat => {
+        const total = filteredTransactions
+            .filter(t => t.category_id === cat.id)
+            .reduce((sum, t) => sum + t.amount, 0);
+        return { name: cat.name, amount: total };
+    })
+    .filter(cat => cat.amount > 0);
+
+  const incomeVsExpenses = [
+      { name: 'Income', amount: totalIncome },
+      { name: 'Expenses', amount: totalExpenses }
+  ];
+  const COLORS = [
+    '#FDBA74', // peach
+    '#C4B5FD', // lavender
+    '#93C5FD', // sky blue
+    '#FCA5A5', // coral
+    '#A7F3D0', // mint
+    '#FEF08A', // yellow
+    '#F9A8D4', // pink
+    '#6EE7B7', // emerald
+    '#BAE6FD', // light blue
+    '#DDD6FE', // light purple
+    '#FCD34D', // amber
+    '#86EFAC', // light green
+    '#FBCFE8', // rose
+    '#BBF7D0', // pale mint
+    '#E9D5FF', // pale lavender
+  ];
 
   
   return (
@@ -98,6 +125,62 @@ function Dashboard() {
         <div className="bg-[#FDBA74] rounded-2xl p-5 shadow-sm">
           <p className="text-sm text-orange-700 mb-1">Total Expenses</p>
           <p className="text-2xl font-semibold text-orange-900">${totalExpenses.toFixed(2)}</p>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+       <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+  <h2 className="text-lg font-semibold text-gray-800 mb-4">Spending by Category</h2>
+  {spendingByCategory.length > 0 ? (
+    <>
+      <ResponsiveContainer width="100%" height={220}>
+        <PieChart>
+          <Pie
+            data={spendingByCategory}
+            dataKey="amount"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            outerRadius={90}
+            innerRadius={40}
+            label={({ name, percent }) => percent > 0.08 ? `${name} ${(percent * 100).toFixed(0)}%` : ''}
+            labelLine={false}
+          >
+            {spendingByCategory.map((entry, index) => (
+              <Cell key={index} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
+          <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
+        </PieChart>
+      </ResponsiveContainer>
+      <div className="flex flex-wrap gap-2 mt-3 justify-center">
+        {spendingByCategory.map((cat, index) => (
+          <div key={cat.name} className="flex items-center gap-1">
+            <div
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: COLORS[index % COLORS.length] }}
+            />
+            <span className="text-xs text-gray-600">{cat.name}</span>
+          </div>
+        ))}
+      </div>
+    </>
+  ) : (
+    <p className="text-sm text-gray-400 text-center py-8">No expenses this period</p>
+  )}
+</div>
+        <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Income vs Expenses</h2>
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={incomeVsExpenses}>
+              <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+              <YAxis tick={{ fontSize: 12 }} />
+              <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
+              <Bar dataKey="amount" radius={[8, 8, 0, 0]}>
+                <Cell fill="#A7F3D0" />
+                <Cell fill="#FDBA74" />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
