@@ -28,33 +28,60 @@ function Categories(){
     fetchCategories();
   };
   return (
-      <div>
-      <h1>Categories</h1>
+    <div>
+      <h1 className="text-2xl font-semibold text-gray-800 mb-6">Categories</h1>
 
-      <input
-        type="text"
-        placeholder="Category name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
+      <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-6">
+        <h2 className="text-lg font-semibold text-gray-700 mb-4">Add Category</h2>
+        <div className="flex gap-3">
+          <input
+            type="text"
+            placeholder="Category name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="flex-1 border border-gray-200 rounded-xl px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-violet-300"
+          />
+          <select
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            className="border border-gray-200 rounded-xl px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-violet-300"
+          >
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+          </select>
+          <button
+            onClick={addCategory}
+            className="bg-[#C4B5FD] text-violet-900 text-sm font-medium px-5 py-2 rounded-xl hover:bg-violet-300 transition-colors"
+          >
+            Add Category
+          </button>
+        </div>
+      </div>
 
-      <select value={type} onChange={(e) => setType(e.target.value)}>
-        <option value="expense">Expense</option>
-        <option value="income">Income</option>
-      </select>
-
-      <button onClick={addCategory}>Add Category</button>
-
-      <ul>
-        {categories.map((cat) => (
-          <li key={cat.id}>
-            {cat.name} — {cat.type}
-            <button onClick={() => deleteCategory(cat.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+      <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <h2 className="text-lg font-semibold text-gray-700 mb-4">All Categories</h2>
+        <ul className="divide-y divide-gray-100">
+          {categories.map((cat) => (
+            <li key={cat.id} className="py-3 flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <span className={`text-xs font-medium px-3 py-1 rounded-full ${cat.type === 'income' ? 'bg-[#A7F3D0] text-emerald-800' : 'bg-[#FDBA74] text-orange-800'}`}>
+                  {cat.type}
+                </span>
+                <p className="text-sm font-medium text-gray-800">{cat.name}</p>
+              </div>
+              <button
+                onClick={() => deleteCategory(cat.id)}
+                className="text-xs text-gray-400 hover:text-red-400 transition-colors"
+              >
+                Delete
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
+
 
 export default Categories;
