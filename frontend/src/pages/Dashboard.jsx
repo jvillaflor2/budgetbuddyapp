@@ -41,9 +41,9 @@ function Dashboard() {
       <h1 className="text-2xl font-semibold text-gray-800 mb-6">Dashboard</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-200">
-          <p className="text-sm text-gray-500 mb-1">Balance</p>
-          <p className="text-2xl font-semibold text-gray-800">${balance.toFixed(2)}</p>
+        <div className={`rounded-2xl p-5 shadow-sm border ${balance >= 0 ? 'bg-[#A7F3D0] border-emerald-100' : 'bg-[#FCA5A5] border-red-100'}`}>
+          <p className={`text-sm mb-1 ${balance >= 0 ? 'text-emerald-700' : 'text-red-700'}`}>Balance</p>
+          <p className={`text-2xl font-semibold ${balance >= 0 ? 'text-emerald-900' : 'text-red-900'}`}>${balance.toFixed(2)}</p>
         </div>
         <div className="bg-[#A7F3D0] rounded-2xl p-5 shadow-sm">
           <p className="text-sm text-emerald-700 mb-1">Total Income</p>
@@ -58,7 +58,10 @@ function Dashboard() {
       <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">Recent Transactions</h2>
         <ul className="divide-y divide-gray-100">
-          {transactions.slice(-5).reverse().map((t) => {
+          {[...transactions]
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .slice(0, 5)
+            .map((t) => {
             const cat = categories.find(c => c.id === t.category_id);
             return (
               <li key={t.id} className="py-3 flex justify-between items-center">
