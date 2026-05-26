@@ -5,6 +5,7 @@ function Categories(){
   const [categories, setCategories] = useState([]);
   const [name, setName] = useState('');
   const [type, setType] = useState('expense');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchCategories();
@@ -18,7 +19,24 @@ function Categories(){
   }
 
   const addCategory = async () => {
+    if (!name.trim()) {
+      setError('Please enter a category name');
+      return;
+    }
+     if (name.trim().length < 2) {
+      setError('Category name must be at least 2 characters');
+      return;
+    }
+    const duplicate = categories.find(
+      cat => cat.name.toLowerCase() === name.trim().toLowerCase()
+    );
+    if (duplicate) {
+      setError('This category already exists');
+      return;
+    }
+
     await axios.post('http://localhost:5000/categories', { name, type });
+    setError('');
     setName('');
     fetchCategories();
   };
@@ -49,6 +67,9 @@ function Categories(){
             <option value="expense">Expense</option>
             <option value="income">Income</option>
           </select>
+          {error && (
+          <p className="text-sm text-red-400 mt-2">{error}</p>
+          )}
           <button
             onClick={addCategory}
             className="bg-[#C4B5FD] text-violet-900 text-sm font-medium px-5 py-2 rounded-xl hover:bg-violet-300 transition-colors"
