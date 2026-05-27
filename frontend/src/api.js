@@ -1,3 +1,3 @@
-const API_URL = 'https://budgetbuddy-api.onrender.com';
+const API_URL = 'https://budgetbuddyapp-api.onrender.com';
 
 export default API_URL;

@@ -20,12 +20,12 @@ function Transactions() {
   }, []);
 
   const fetchTransactions = async () => {
-    const response = await axios.get('https://your-render-url.onrender.com/transactions');
+    const response = await axios.get('${API_URL}/transactions');
     setTransactions(response.data);
   };
 
   const fetchCategories = async () => {
-    const response = await axios.get('https://your-render-url.onrender.com/categories');
+    const response = await axios.get('${API_URL}/categories');
     setCategories(response.data);
   };
   const filteredTransactions = transactions.filter(t => {
@@ -66,7 +66,7 @@ function Transactions() {
       return;
     }
     setError('');
-    await axios.post('https://your-render-url.onrender.com/transactions', {
+    await axios.post('${API_URL}/transactions', {
       amount: parseFloat(amount),
       category_id: parseInt(categoryId),
       date,
@@ -80,7 +80,7 @@ function Transactions() {
   };
 
   const deleteTransaction = async (id) => {
-    await axios.delete(`https://your-render-url.onrender.com/transactions/${id}`);
+    await axios.delete(`${API_URL}/transactions/${id}`);
     fetchTransactions();
   };
 

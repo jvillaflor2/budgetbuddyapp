@@ -14,7 +14,7 @@ function Categories(){
 
   
   const fetchCategories = async() => {
-    const response = await axios.get('https://your-render-url.onrender.com/categories');
+    const response = await axios.get('${API_URL}/categories');
     setCategories(response.data);
 
   }
@@ -36,14 +36,14 @@ function Categories(){
       return;
     }
 
-    await axios.post('https://your-render-url.onrender.com/categories', { name, type });
+    await axios.post('${API_URL}/categories', { name, type });
     setError('');
     setName('');
     fetchCategories();
   };
 
   const deleteCategory = async (id) => {
-    await axios.delete(`https://your-render-url.onrender.com/categories/${id}`);
+    await axios.delete(`${API_URL}/categories/${id}`);
     fetchCategories();
   };
   return (
