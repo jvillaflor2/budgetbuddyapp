@@ -7,7 +7,8 @@ bp = Blueprint('bp', __name__ )
 @bp.route('/categories', methods=['GET'])
 def get_categories():
     categories = Category.query.all()
-    return jsonify([{ 'id': c.id, 'name': c.name, 'type': c.type } for c in categories])
+    return jsonify([{ 'id': c.id, 'name': c.name, 'type': c.type, 'budget_limit' : c.budget_limit
+    } for c in categories])
 
 #POST/ categories
 @bp.route('/categories', methods = ['POST'])
@@ -25,6 +26,19 @@ def delete_category(id):
     db.session.delete(category)
     db.session.commit()
     return jsonify({'message': 'Deleted'}), 200
+
+@bp.route('/categories/<int:id>', methods=['PUT'])
+def update_category(id):
+    category = Category.query.get_or_404(id)
+    data = request.get_json()
+    category.budget_limit = data.get('budget_limit')
+    db.session.commit()
+    return jsonify({
+        'id': category.id,
+        'name': category.name,
+        'type': category.type,
+        'budget_limit': category.budget_limit
+    }), 200
 
 #GET /transactions
 @bp.route('/transactions', methods=['GET'])
