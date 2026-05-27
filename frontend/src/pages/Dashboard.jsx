@@ -184,6 +184,42 @@ function Dashboard() {
           </ResponsiveContainer>
         </div>
       </div>
+      <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-8">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">Budget Goals</h2>
+        {categories
+          .filter(cat => cat.type === 'expense' && cat.budget_limit)
+          .map(cat => {
+            const spent = filteredTransactions
+              .filter(t => t.category_id === cat.id)
+              .reduce((sum, t) => sum + t.amount, 0);
+            const percent = Math.min((spent / cat.budget_limit) * 100, 100);
+            const isOver = spent > cat.budget_limit;
+            const isClose = percent >= 70 && !isOver;
+
+            return (
+              <div key={cat.id} className="mb-4">
+                <div className="flex justify-between items-center mb-1">
+                  <p className="text-sm font-medium text-gray-700">{cat.name}</p>
+                  <p className={`text-xs font-medium ${isOver ? 'text-red-500' : isClose ? 'text-orange-500' : 'text-emerald-600'}`}>
+                    ${spent.toFixed(2)} / ${cat.budget_limit.toFixed(2)}
+                  </p>
+                </div>
+                <div className="w-full bg-gray-100 rounded-full h-2">
+                  <div
+                    className={`h-2 rounded-full transition-all ${isOver ? 'bg-red-400' : isClose ? 'bg-[#FDBA74]' : 'bg-[#A7F3D0]'}`}
+                    style={{ width: `${percent}%` }}
+                  />
+                </div>
+                {isOver && (
+                  <p className="text-xs text-red-400 mt-1">Over budget by ${(spent - cat.budget_limit).toFixed(2)}</p>
+                )}
+              </div>
+            );
+          })}
+        {categories.filter(cat => cat.type === 'expense' && cat.budget_limit).length === 0 && (
+          <p className="text-sm text-gray-400 text-center py-4">No budget goals set — add limits in Categories!</p>
+        )}
+      </div>
 
       <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">Recent Transactions</h2>
