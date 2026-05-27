@@ -9,6 +9,9 @@ function Transactions() {
   const [date, setDate] = useState('');
   const [note, setNote] = useState('');
   const [error, setError] = useState('')
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     fetchTransactions();
@@ -24,6 +27,14 @@ function Transactions() {
     const response = await axios.get('http://localhost:5000/categories');
     setCategories(response.data);
   };
+  const filteredTransactions = transactions.filter(t => {
+    const [year, month] = t.date.split('-').map(Number);
+    const matchesMonth = selectedMonth === 0 || (month === selectedMonth && year === selectedYear);
+    const matchesSearch =
+      t.note?.toLowerCase().includes(search.toLowerCase()) ||
+      categories.find(c => c.id === t.category_id)?.name.toLowerCase().includes(search.toLowerCase());
+    return matchesMonth && matchesSearch;
+  });
 
   const addTransaction = async () => {
     if (!amount) {
@@ -75,6 +86,44 @@ function Transactions() {
   return (
     <div>
       <h1 className ="text-2xl font-semibold text-gray-800 mb-6">Transactions</h1>
+      <div className="flex flex-col md:flex-row gap-3 mb-6">
+        <select
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+          className="border border-gray-200 rounded-xl px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-violet-300"
+        >
+          <option value={0}>Full Year</option>
+          <option value={1}>January</option>
+          <option value={2}>February</option>
+          <option value={3}>March</option>
+          <option value={4}>April</option>
+          <option value={5}>May</option>
+          <option value={6}>June</option>
+          <option value={7}>July</option>
+          <option value={8}>August</option>
+          <option value={9}>September</option>
+          <option value={10}>October</option>
+          <option value={11}>November</option>
+          <option value={12}>December</option>
+        </select>
+        <select
+          value={selectedYear}
+          onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+          className="border border-gray-200 rounded-xl px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-violet-300"
+        >
+          <option value={2024}>2024</option>
+          <option value={2025}>2025</option>
+          <option value={2026}>2026</option>
+          <option value={2027}>2027</option>
+        </select>
+        <input
+          type="text"
+          placeholder="Search by category or note..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="flex-1 border border-gray-200 rounded-xl px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-violet-300"
+        />
+      </div>
       <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-6">
         <h2 className="text-lg font-semibold text-gray-700 mb-4">Add Transaction</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
