@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///budgetbuddy.db'
 
 db.init_app(app)
-CORS(app  origins=['https://budgetbuddyapp-jv2.netlify.app'])
+CORS(app,  origins=['https://budgetbuddyapp-jv2.netlify.app'])
 
 app.register_blueprint(bp)
 
