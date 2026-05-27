@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, {useState, useEffect} from 'react';
+import API_URL from '../api';
 
 function Categories(){
   const [categories, setCategories] = useState([]);
@@ -13,7 +14,7 @@ function Categories(){
 
   
   const fetchCategories = async() => {
-    const response = await axios.get('http://localhost:5000/categories');
+    const response = await axios.get('https://your-render-url.onrender.com/categories');
     setCategories(response.data);
 
   }
@@ -35,14 +36,14 @@ function Categories(){
       return;
     }
 
-    await axios.post('http://localhost:5000/categories', { name, type });
+    await axios.post('https://your-render-url.onrender.com/categories', { name, type });
     setError('');
     setName('');
     fetchCategories();
   };
 
   const deleteCategory = async (id) => {
-    await axios.delete(`http://localhost:5000/categories/${id}`);
+    await axios.delete(`https://your-render-url.onrender.com/categories/${id}`);
     fetchCategories();
   };
   return (

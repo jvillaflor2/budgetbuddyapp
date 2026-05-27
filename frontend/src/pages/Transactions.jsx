@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+import API_URL from '../api';
 
 function Transactions() {
   const [transactions, setTransactions] = useState([]);
@@ -19,12 +20,12 @@ function Transactions() {
   }, []);
 
   const fetchTransactions = async () => {
-    const response = await axios.get('http://localhost:5000/transactions');
+    const response = await axios.get('https://your-render-url.onrender.com/transactions');
     setTransactions(response.data);
   };
 
   const fetchCategories = async () => {
-    const response = await axios.get('http://localhost:5000/categories');
+    const response = await axios.get('https://your-render-url.onrender.com/categories');
     setCategories(response.data);
   };
   const filteredTransactions = transactions.filter(t => {
@@ -65,7 +66,7 @@ function Transactions() {
       return;
     }
     setError('');
-    await axios.post('http://localhost:5000/transactions', {
+    await axios.post('https://your-render-url.onrender.com/transactions', {
       amount: parseFloat(amount),
       category_id: parseInt(categoryId),
       date,
@@ -79,7 +80,7 @@ function Transactions() {
   };
 
   const deleteTransaction = async (id) => {
-    await axios.delete(`http://localhost:5000/transactions/${id}`);
+    await axios.delete(`https://your-render-url.onrender.com/transactions/${id}`);
     fetchTransactions();
   };
 

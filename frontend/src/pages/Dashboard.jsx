@@ -1,6 +1,7 @@
 import React, {useState, useEffect}from 'react';
 import axios from 'axios';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts/umd/Recharts';
+import API_URL from '../api';
 
 function Dashboard() {
 
@@ -15,11 +16,11 @@ function Dashboard() {
 }, []);
 
   const fetchTransactions = async () => {
-    const response = await axios.get('http://localhost:5000/transactions');
+    const response = await axios.get('https://your-render-url.onrender.com/transactions');
     setTransactions(response.data)
   }
   const fetchCategories = async () => {
-    const response = await axios.get('http://localhost:5000/categories');
+    const response = await axios.get('https://your-render-url.onrender.com/categories');
     setCategories(response.data);
   };
 
