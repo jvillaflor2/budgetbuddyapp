@@ -5,8 +5,8 @@ db = SQLAlchemy()
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable = False)
-    type = db.Column(db.String(10), nullable=False)  budget_limit = db.Column(db.Float, nullable=True)
-
+    type = db.Column(db.String(10), nullable=False)
+    budget_limit = db.Column(db.Float, nullable=True)
 
 
 class Transaction(db.Model):
