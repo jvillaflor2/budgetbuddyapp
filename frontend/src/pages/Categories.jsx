@@ -7,6 +7,7 @@ function Categories(){
   const [name, setName] = useState('');
   const [type, setType] = useState('expense');
   const [error, setError] = useState('');
+  const [budgetLimit, setBudgetLimit] = useState('');
 
   useEffect(() => {
     fetchCategories();
@@ -44,6 +45,13 @@ function Categories(){
 
   const deleteCategory = async (id) => {
     await axios.delete(`${API_URL}/categories/${id}`);
+    fetchCategories();
+  };
+
+  const updateBudgetLimit = async (id, limit) => {
+    await axios.put(`${API_URL}/categories/${id}`, {
+      budget_limit: limit ? parseFloat(limit) : null
+    });
     fetchCategories();
   };
   return (
@@ -91,12 +99,23 @@ function Categories(){
                 </span>
                 <p className="text-sm font-medium text-gray-800">{cat.name}</p>
               </div>
-              <button
-                onClick={() => deleteCategory(cat.id)}
-                className="text-xs text-gray-400 hover:text-red-400 transition-colors"
-              >
-                Delete
-              </button>
+              <div className="flex items-center gap-3">
+                {cat.type === 'expense' && (
+                  <input
+                    type="number"
+                    placeholder="Budget limit"
+                    defaultValue={cat.budget_limit || ''}
+                    onBlur={(e) => updateBudgetLimit(cat.id, e.target.value)}
+                    className="w-28 border border-gray-200 rounded-xl px-3 py-1 text-xs text-gray-700 focus:outline-none focus:ring-2 focus:ring-violet-300"
+                  />
+                )}
+                <button
+                  onClick={() => deleteCategory(cat.id)}
+                  className="text-xs text-gray-400 hover:text-red-400 transition-colors"
+                >
+                  Delete
+                </button>
+              </div>
             </li>
           ))}
         </ul>
