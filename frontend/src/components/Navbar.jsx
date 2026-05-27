@@ -5,8 +5,8 @@ function Navbar() {
   const location = useLocation();
   
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-100 px-6 py-4">
-      <div className="max-w-5xl mx-auto flex items-center justify-between">
+    <nav className="sticky top-0 z-50 px-6 py-4 border-b border-gray-100" style={{ backdropFilter: 'blur(12px)', background: 'rgba(255,255,255,0.75)' }}>
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
         <h1 className="text-xl font-semibold">
         <span className="text-emerald-500">Budget</span>
         <span className="text-violet-400"> Buddy</span>
