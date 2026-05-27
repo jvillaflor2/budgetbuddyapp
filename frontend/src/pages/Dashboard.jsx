@@ -13,7 +13,15 @@ function Dashboard() {
   useEffect(() => {
     fetchTransactions();
     fetchCategories();
-}, []);
+  }, []);
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-CA', {
+      style: 'currency',
+      currency: 'CAD',
+      minimumFractionDigits: 2
+    }).format(amount);
+  };
 
   const fetchTransactions = async () => {
     const response = await axios.get(`${API_URL}/transactions`);
@@ -115,21 +123,21 @@ function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div className={`rounded-2xl p-5 shadow-sm border ${balance >= 0 ? 'bg-[#A7F3D0] border-emerald-100' : 'bg-[#FCA5A5] border-red-100'}`}>
+        <div className={`rounded-2xl p-5 card border ${balance >= 0 ? 'bg-[#A7F3D0] border-emerald-100' : 'bg-[#FCA5A5] border-red-100'}`}>
           <p className={`text-sm mb-1 ${balance >= 0 ? 'text-emerald-700' : 'text-red-700'}`}>Balance</p>
-          <p className={`text-2xl font-semibold ${balance >= 0 ? 'text-emerald-900' : 'text-red-900'}`}>${balance.toFixed(2)}</p>
+          <p className={`text-2xl font-semibold ${balance >= 0 ? 'text-emerald-900' : 'text-red-900'}`}>{formatCurrency(balance)}</p>
         </div>
-        <div className="bg-[#A7F3D0] rounded-2xl p-5 shadow-sm">
+        <div className="bg-[#A7F3D0] rounded-2xl p-5 card">
           <p className="text-sm text-emerald-700 mb-1">Total Income</p>
-          <p className="text-2xl font-semibold text-emerald-900">${totalIncome.toFixed(2)}</p>
+          <p className="text-2xl font-semibold text-emerald-900">{formatCurrency(totalIncome)}</p>
         </div>
-        <div className="bg-[#FDBA74] rounded-2xl p-5 shadow-sm">
+        <div className="bg-[#FDBA74] rounded-2xl p-5 card">
           <p className="text-sm text-orange-700 mb-1">Total Expenses</p>
-          <p className="text-2xl font-semibold text-orange-900">${totalExpenses.toFixed(2)}</p>
+          <p className="text-2xl font-semibold text-orange-900">{formatCurrency(totalExpenses)}</p>
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-       <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+       <div className="bg-white rounded-2xl p-5 card border border-gray-100">
   <h2 className="text-lg font-semibold text-gray-800 mb-4">Spending by Category</h2>
   {spendingByCategory.length > 0 ? (
     <>
@@ -150,7 +158,7 @@ function Dashboard() {
               <Cell key={index} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
-          <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
+          <Tooltip formatter={(value) => formatCurrency(value)} />
         </PieChart>
       </ResponsiveContainer>
       <div className="flex flex-wrap gap-2 mt-3 justify-center">
@@ -169,13 +177,13 @@ function Dashboard() {
     <p className="text-sm text-gray-400 text-center py-8">No expenses this period</p>
   )}
 </div>
-        <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <div className="bg-white rounded-2xl p-5 card border border-gray-100">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">Income vs Expenses</h2>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={incomeVsExpenses}>
               <XAxis dataKey="name" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} />
-              <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
+             <Tooltip formatter={(value) => formatCurrency(value)} />
               <Bar dataKey="amount" radius={[8, 8, 0, 0]}>
                 <Cell fill="#A7F3D0" />
                 <Cell fill="#FDBA74" />
@@ -184,7 +192,7 @@ function Dashboard() {
           </ResponsiveContainer>
         </div>
       </div>
-      <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-8">
+      <div className="bg-white rounded-2xl p-5 card border border-gray-100 mb-8">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">Budget Goals</h2>
         {categories
           .filter(cat => cat.type === 'expense' && cat.budget_limit)
@@ -201,7 +209,7 @@ function Dashboard() {
                 <div className="flex justify-between items-center mb-1">
                   <p className="text-sm font-medium text-gray-700">{cat.name}</p>
                   <p className={`text-xs font-medium ${isOver ? 'text-red-500' : isClose ? 'text-orange-500' : 'text-emerald-600'}`}>
-                    ${spent.toFixed(2)} / ${cat.budget_limit.toFixed(2)}
+                    {formatCurrency(spent)} / {formatCurrency(cat.budget_limit)} 
                   </p>
                 </div>
                 <div className="w-full bg-gray-100 rounded-full h-2">
@@ -211,7 +219,7 @@ function Dashboard() {
                   />
                 </div>
                 {isOver && (
-                  <p className="text-xs text-red-400 mt-1">Over budget by ${(spent - cat.budget_limit).toFixed(2)}</p>
+                  <p className="text-xs text-red-400 mt-1">Over budget by {formatCurrency(spent - cat.budget_limit)}</p>
                 )}
               </div>
             );
@@ -221,7 +229,7 @@ function Dashboard() {
         )}
       </div>
 
-      <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+      <div className="bg-white rounded-2xl p-5 card border border-gray-100">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">Recent Transactions</h2>
         <ul className="divide-y divide-gray-100">
           {[...filteredTransactions]
@@ -236,7 +244,7 @@ function Dashboard() {
                   <p className="text-xs text-gray-400">{t.date} {t.note && `— ${t.note}`}</p>
                 </div>
                 <p className={`text-sm font-semibold px-3 py-1 rounded-full ${cat && cat.type === 'income' ? 'bg-[#A7F3D0] text-emerald-800' : 'bg-[#FDBA74] text-orange-800'}`}>
-                  {cat && cat.type === 'income' ? '+' : '-'}${t.amount}
+                  {cat && cat.type === 'income' ? '+' : '-'}{formatCurrency(t.amount)} 
                 </p>
               </li>
             );

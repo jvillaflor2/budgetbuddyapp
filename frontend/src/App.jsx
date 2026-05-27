@@ -10,7 +10,7 @@ function App() {
     <BrowserRouter>
       <div className="min-h-screen bg-[#F8FAFC]">
         <Navbar />
-        <div className= "max-w-5xl mx-auto px-6 py-8 ">
+        <div className= "max-w-5xl mx-auto px-6 py-10">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/transactions" element={<Transactions />} />
