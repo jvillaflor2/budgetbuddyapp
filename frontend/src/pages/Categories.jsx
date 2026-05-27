@@ -14,7 +14,7 @@ function Categories(){
 
   
   const fetchCategories = async() => {
-    const response = await axios.get('${API_URL}/categories');
+    const response = await axios.get(`${API_URL}/categories`);
     setCategories(response.data);
 
   }
@@ -36,7 +36,7 @@ function Categories(){
       return;
     }
 
-    await axios.post('${API_URL}/categories', { name, type });
+    await axios.post(`${API_URL}/categories`), { name, type });
     setError('');
     setName('');
     fetchCategories();
