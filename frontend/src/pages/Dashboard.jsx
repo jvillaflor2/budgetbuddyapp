@@ -16,11 +16,11 @@ function Dashboard() {
 }, []);
 
   const fetchTransactions = async () => {
-    const response = await axios.get('${API_URL}/transactions');
+    const response = await axios.get(`${API_URL}/transactions`);
     setTransactions(response.data)
   }
   const fetchCategories = async () => {
-    const response = await axios.get('${API_URL}/categories');
+    const response = await axios.get(`${API_URL}/categories`);
     setCategories(response.data);
   };
 

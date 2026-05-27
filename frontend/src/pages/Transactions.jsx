@@ -20,12 +20,12 @@ function Transactions() {
   }, []);
 
   const fetchTransactions = async () => {
-    const response = await axios.get('${API_URL}/transactions');
+    const response = await axios.get(`${API_URL}/transactions`);
     setTransactions(response.data);
   };
 
   const fetchCategories = async () => {
-    const response = await axios.get('${API_URL}/categories');
+    const response = await axios.get(`${API_URL}/categories`);
     setCategories(response.data);
   };
   const filteredTransactions = transactions.filter(t => {
@@ -66,7 +66,7 @@ function Transactions() {
       return;
     }
     setError('');
-    await axios.post('${API_URL}/transactions', {
+    await axios.post(`${API_URL}/transactions`, {
       amount: parseFloat(amount),
       category_id: parseInt(categoryId),
       date,
@@ -171,7 +171,7 @@ function Transactions() {
       <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
         <h2 className="text-lg font-semibold text-gray-700 mb-4">All Transactions</h2>
         <ul className="divide-y divide-gray-100">
-           {transactions.map((t) => {
+           {filteredTransactions.map((t) => {
             const cat = categories.find(c => c.id === t.category_id);
             return (
               <li key={t.id} className="py-3 flex flex-col gap-2">

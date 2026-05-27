@@ -36,7 +36,7 @@ function Categories(){
       return;
     }
 
-    await axios.post(`${API_URL}/categories`), { name, type });
+    await axios.post(`${API_URL}/categories`, { name, type });
     setError('');
     setName('');
     fetchCategories();
