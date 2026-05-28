@@ -8,7 +8,7 @@ import Categories from './pages/Categories';
 function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-[#F8FAFC]">
+      <div className="min-h-screen bg-[#FEFDF8]">
         <Navbar />
         <div className= "max-w-5xl mx-auto px-6 py-10">
           <Routes>
