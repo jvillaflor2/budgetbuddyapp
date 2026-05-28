@@ -2,6 +2,11 @@ import React, {useState, useEffect}from 'react';
 import axios from 'axios';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer} from 'recharts/umd/Recharts';
 import API_URL from '../api';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination} from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
 function Dashboard() {
 
@@ -150,126 +155,132 @@ function Dashboard() {
           <p className="text-2xl font-semibold text-orange-800">{formatCurrency(totalExpenses)}</p>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-       <div className="bg-white rounded-2xl p-5 card border border-gray-100">
-  <h2 className="text-lg font-semibold text-gray-700 mb-4">Spending by Category</h2>
-  {spendingByCategory.length > 0 ? (
-    <>
-      <ResponsiveContainer width="100%" height={220}>
-        <PieChart>
-          <Pie
-            data={spendingByCategory}
-            dataKey="amount"
-            nameKey="name"
-            cx="50%"
-            cy="50%"
-            outerRadius={90}
-            innerRadius={50}
-            labelLine={false}
-          >
-            {spendingByCategory.map((entry, index) => (
-              <Cell key={index} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-                  <Tooltip
-                    formatter={(value, name) => [
-                      `${formatCurrency(value)} (${((value / spendingByCategory.reduce((sum, cat) => sum + cat.amount, 0)) * 100).toFixed(1)}%)`,
-                      name
-                    ]}
-                  />
-                  <text x="50%" y="45%" textAnchor="middle" dominantBaseline="middle" className="recharts-text">
-                    <tspan x="50%" dy="0" fontSize="16" fontWeight="600" fill="#4B5563">
-                      {formatCurrency(totalExpenses)}
-                    </tspan>
-                    <tspan x="50%" dy="20" fontSize="10" fill="#9CA3AF">
-                      total spent
-                    </tspan>
-                  </text>
-        </PieChart>
-      </ResponsiveContainer>
-              <div className="flex flex-wrap gap-2 mt-3 justify-center">
-                {(() => {
-                  const total = spendingByCategory.reduce((sum, c) => sum + c.amount, 0);
-                  return spendingByCategory.map((cat, index) => {
-                    const percent = ((cat.amount / total) * 100).toFixed(1);
-                    return (
-                      <div key={cat.name} className="flex items-center gap-1">
-                        <div
-                          className="w-3 h-3 rounded-full"
-                          style={{ backgroundColor: COLORS[index % COLORS.length] }}
-                        />
-                        <span className="text-xs text-gray-600">{cat.name} {percent}%</span>
+    <div className="mb-8" >
+        <Swiper
+          modules={[Pagination]}
+          pagination={{ clickable: true }}
+          navigation={true}
+          spaceBetween={20}
+          slidesPerView={1}
+          className="pb-8"
+        >
+          {/* Slide 1 - Spending by Category */}
+          <SwiperSlide>
+            <div className="bg-white rounded-2xl p-5 card border border-gray-100">
+              <h2 className="text-lg font-semibold text-gray-700 mb-4">Spending by Category</h2>
+              {spendingByCategory.length > 0 ? (
+                <>
+                  <ResponsiveContainer width="100%" height={220}>
+                    <PieChart>
+                      <Pie
+                        data={spendingByCategory}
+                        dataKey="amount"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={90}
+                        innerRadius={50}
+                        labelLine={false}
+                      >
+                        {spendingByCategory.map((entry, index) => (
+                          <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip
+                        formatter={(value, name) => [
+                          `${formatCurrency(value)} (${((value / spendingByCategory.reduce((sum, cat) => sum + cat.amount, 0)) * 100).toFixed(1)}%)`,
+                          name
+                        ]}
+                      />
+                      <text x="50%" y="45%" textAnchor="middle" dominantBaseline="middle">
+                        <tspan x="50%" dy="0" fontSize="16" fontWeight="600" fill="#4B5563">
+                          {formatCurrency(totalExpenses)}
+                        </tspan>
+                        <tspan x="50%" dy="20" fontSize="10" fill="#9CA3AF">
+                          total spent
+                        </tspan>
+                      </text>
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="flex flex-wrap gap-2 mt-3 justify-center">
+                    {(() => {
+                      const total = spendingByCategory.reduce((sum, c) => sum + c.amount, 0);
+                      return spendingByCategory.map((cat, index) => {
+                        const percent = ((cat.amount / total) * 100).toFixed(1);
+                        return (
+                          <div key={cat.name} className="flex items-center gap-1">
+                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+                            <span className="text-xs text-gray-600">{cat.name} {percent}%</span>
+                          </div>
+                        );
+                      });
+                    })()}
+                  </div>
+                </>
+              ) : (
+                <p className="text-sm text-gray-400 text-center py-8">No expenses this period</p>
+              )}
+            </div>
+          </SwiperSlide>
+
+          {/* Slide 2 - Income vs Expenses */}
+          <SwiperSlide>
+            <div className="bg-white rounded-2xl p-5 card border border-gray-100">
+              <h2 className="text-lg font-semibold text-gray-700 mb-4">Income vs Expenses</h2>
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={incomeVsExpenses} barSize={60}>
+                  <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#9CA3AF' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 12, fill: '#9CA3AF' }} axisLine={false} tickLine={false} />
+                  <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.04)' }} />
+                  <Bar dataKey="amount" radius={[8, 8, 0, 0]}>
+                    <Cell fill="#A7F3D0" />
+                    <Cell fill="#FDBA74" />
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </SwiperSlide>
+
+          {/* Slide 3 - Budget Goals */}
+          <SwiperSlide style={{ height: 'auto' }}>
+            <div className="bg-white rounded-2xl p-5 card border border-gray-100">
+              <h2 className="text-lg font-semibold text-gray-700 mb-4">Budget Goals</h2>
+              {categories
+                .filter(cat => cat.type === 'expense' && cat.budget_limit)
+                .map(cat => {
+                  const spent = filteredTransactions
+                    .filter(t => t.category_id === cat.id)
+                    .reduce((sum, t) => sum + t.amount, 0);
+                  const percent = Math.min((spent / cat.budget_limit) * 100, 100);
+                  const isOver = spent > cat.budget_limit;
+                  const isClose = percent >= 70 && !isOver;
+                  return (
+                    <div key={cat.id} className="mb-4">
+                      <div className="flex justify-between items-center mb-1">
+                        <p className="text-sm font-medium text-gray-700">{cat.name}</p>
+                        <p className={`text-xs font-medium ${isOver ? 'text-red-500' : isClose ? 'text-orange-500' : 'text-emerald-600'}`}>
+                          {formatCurrency(spent)} / {formatCurrency(cat.budget_limit)}
+                        </p>
                       </div>
-                    );
-                  });
-                })()}
-              </div>
-    </>
-  ) : (
-    <p className="text-sm text-gray-400 text-center py-8">No expenses this period</p>
-  )}
-</div>
-        <div className="bg-white rounded-2xl p-5 card border border-gray-100">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">Income vs Expenses</h2>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={incomeVsExpenses} barSize={60}>
-              <XAxis
-                dataKey="name"
-                tick={{ fontSize: 12, fill: '#9CA3AF' }}
-                axisLine={false}
-                tickLine={false}
-              />
-              <YAxis
-                tick={{ fontSize: 12, fill: '#9CA3AF' }}
-                axisLine={false}
-                tickLine={false}
-              />
-             <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.04)' }} />
-              <Bar dataKey="amount" radius={[8, 8, 0, 0]}>
-                <Cell fill="#A7F3D0" />
-                <Cell fill="#FDBA74" />
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+                      <div className="w-full bg-gray-100 rounded-full h-2">
+                        <div
+                          className={`h-2 rounded-full transition-all ${isOver ? 'bg-red-400' : isClose ? 'bg-[#FDBA74]' : 'bg-[#A7F3D0]'}`}
+                          style={{ width: `${percent}%` }}
+                        />
+                      </div>
+                      {isOver && (
+                        <p className="text-xs text-red-400 mt-1">Over budget by {formatCurrency(spent - cat.budget_limit)}</p>
+                      )}
+                    </div>
+                  );
+                })}
+              {categories.filter(cat => cat.type === 'expense' && cat.budget_limit).length === 0 && (
+                <p className="text-sm text-gray-400 text-center py-4">No budget goals set — add limits in Categories!</p>
+              )}
+            </div>
+          </SwiperSlide>
+        </Swiper>
       </div>
-      <div className="bg-white rounded-2xl p-5 card border border-gray-100 mb-8">
-        <h2 className="text-lg font-semibold text-gray-700 mb-4">Budget Goals</h2>
-        {categories
-          .filter(cat => cat.type === 'expense' && cat.budget_limit)
-          .map(cat => {
-            const spent = filteredTransactions
-              .filter(t => t.category_id === cat.id)
-              .reduce((sum, t) => sum + t.amount, 0);
-            const percent = Math.min((spent / cat.budget_limit) * 100, 100);
-            const isOver = spent > cat.budget_limit;
-            const isClose = percent >= 70 && !isOver;
-
-            return (
-              <div key={cat.id} className="mb-4">
-                <div className="flex justify-between items-center mb-1">
-                  <p className="text-sm font-medium text-gray-700">{cat.name}</p>
-                  <p className={`text-xs font-medium ${isOver ? 'text-red-500' : isClose ? 'text-orange-500' : 'text-emerald-600'}`}>
-                    {formatCurrency(spent)} / {formatCurrency(cat.budget_limit)} 
-                  </p>
-                </div>
-                <div className="w-full bg-gray-100 rounded-full h-2">
-                  <div
-                    className={`h-2 rounded-full transition-all ${isOver ? 'bg-red-400' : isClose ? 'bg-[#FDBA74]' : 'bg-[#A7F3D0]'}`}
-                    style={{ width: `${percent}%` }}
-                  />
-                </div>
-                {isOver && (
-                  <p className="text-xs text-red-400 mt-1">Over budget by {formatCurrency(spent - cat.budget_limit)}</p>
-                )}
-              </div>
-            );
-          })}
-        {categories.filter(cat => cat.type === 'expense' && cat.budget_limit).length === 0 && (
-          <p className="text-sm text-gray-400 text-center py-4">No budget goals set — add limits in Categories!</p>
-        )}
-      </div>
-
       <div className="bg-white rounded-2xl p-5 card border border-gray-100">
         <h2 className="text-lg font-semibold text-gray-700 mb-4">Recent Transactions</h2>
         <ul className="divide-y divide-gray-100">

@@ -35,3 +35,10 @@ body {
   background-size: 400% 400%;
   animation: gradientShift 6s ease infinite;
 }
+.swiper-pagination-bullet-active {
+  background: #C4B5FD !important;
+}
+
+.swiper-pagination-bullet {
+  background: #D1D5DB;
+}
